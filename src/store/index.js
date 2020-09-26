@@ -4,6 +4,7 @@ import Vuex from "vuex";
 import Axios from 'axios';
 import CartModule from './cart';
 import OrdersModule from './orders';
+import AuthModule from './auth';
 
 Vue.use(Vuex);
 
@@ -15,7 +16,8 @@ export default new Vuex.Store({
   strict: true,
   modules: {
     cart: CartModule,
-    orders: OrdersModule
+    orders: OrdersModule,
+    auth: AuthModule
   },
   state: {
     // products: [],
@@ -25,7 +27,9 @@ export default new Vuex.Store({
     pageSize: 4,
     currentCategory: 'All',
     pages: [],
-    serverPageCount: 0
+    serverPageCount: 0,
+    searchTerm: '',
+    showSearch: false
   },
   getters:{
     // productsFilteredByCategory: state => state.products.
@@ -48,11 +52,6 @@ export default new Vuex.Store({
       state.currentCategory = category;
       state.currentPage = 1;
     },
-    // setData(state, data){
-    //   state.products = data.pdata;
-    //   state.productsTotal = data.pdata.length;
-    //   state.categoriesData = data.cdata.sort();
-    // }
     addPage(state, page){
       for (let i = 0; i < page.pageCount; i++) {
         Vue.set(state.pages, page.number + i, page.data.slice(i * state.pageSize, (i * state.pageSize) +  state.pageSize));
@@ -67,12 +66,16 @@ export default new Vuex.Store({
     setPageCount(state, count){
       state.serverPageCount = Math.ceil(Number(count) / state.pageSize)
     },
+    setShowSearch(state, show){
+      state.showSearch = show;
+    },
+    setSearchTerm(state, term){
+      state.searchTerm = term;
+      state.currentPage = 1;
+    }
   },
   actions: {
     async getData(context){
-      // let pdata = (await Axios.get(productsUrl)).data;
-      // let cdata = (await Axios.get(categoriesUrl)).data;
-      // context.commit('setData', {pdata, cdata});
       await context.dispatch('getPage', 2);
       context.commit('setCategories', (await Axios.get(categoriesUrl)).data);
     },
@@ -80,6 +83,9 @@ export default new Vuex.Store({
       let url = `${productsUrl}?_page=${context.state.currentPage}&_limit=${context.state.pageSize * getPageCount}`;
       if(context.state.currentCategory != 'All'){
         url += `&category=${context.state.currentCategory}`;
+      }
+      if(context.state.searchTerm != ''){
+        url += `&q=${context.state.searchTerm}`;
       }
       let response = await Axios.get(url);
       context.commit('setPageCount', response.headers['x-total-count']);
@@ -100,6 +106,16 @@ export default new Vuex.Store({
       context.commit('clearPages');
       context.commit('_setCurrentCategory', category);
       context.dispatch('getPage', 2)
+    },
+    search(context, term){
+      context.commit('setSearchTerm', term);
+      context.commit('clearPages');
+      context.dispatch('getPage', 2);
+    },
+    clearSearchTerm(context){
+      context.commit('setSearchTerm', '');
+      context.commit('clearPages');
+      context.dispatch('getPage', 2);
     }
   }
 });

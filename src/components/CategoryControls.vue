@@ -14,7 +14,7 @@
   </div>
 </template>
 <script>
-import { mapState, mapGetters, mapMutations } from 'vuex'
+import { mapState, mapGetters, mapActions } from 'vuex'
 
 export default {
   computed:{
@@ -22,7 +22,7 @@ export default {
     ...mapGetters(['categories'])
   },
   methods:{
-    ...mapMutations(['setCurrentCategory'])
+    ...mapActions(['setCurrentCategory'])
   }
 }
 </script>
