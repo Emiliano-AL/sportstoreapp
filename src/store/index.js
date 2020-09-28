@@ -12,7 +12,7 @@ const productsUrl = `${baseUrl}/products`;
 const categoriesUrl = `${baseUrl}/categories`;
 
 export default new Vuex.Store({
-  strict: false,
+  strict: true,
   modules: { cart: CartModule, orders: OrdersModule, auth: AuthModule },
   state: {
     categoriesData: [],
