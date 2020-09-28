@@ -3,24 +3,18 @@
 </template>
 
 <script>
-// import Store from './components/Store';
-import { mapActions } from 'vuex';
-
+import { mapActions } from "vuex";
 export default {
-  name: 'App',
-  components: {
-    // Store
-  },
+  name: "app",
   methods: {
     ...mapActions({
-      getData: 'getData',
-      initializeCart: 'cart/initializeCart'
-      })
+      getData: "getData",
+      initializeCart: "cart/initializeCart",
+    }),
   },
-  created(){
+  created() {
     this.getData();
     this.initializeCart(this.$store);
-  }
-}
+  },
+};
 </script>
-

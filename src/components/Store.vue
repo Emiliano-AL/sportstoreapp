@@ -8,7 +8,12 @@
     </div>
     <div class="row">
       <div class="col-3 bg-info p-2">
-        <CategoryControls />
+        <CategoryControls class="mb-5" />
+        <button 
+          class="btn btn-block btn-warning mt-5" 
+          v-on:click="setShowSearch(true)">
+          Search
+        </button> 
       </div>
       <div class="col-9 bg-success p-2">
         <Search />

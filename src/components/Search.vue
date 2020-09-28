@@ -15,6 +15,7 @@
     </button>
   </div>
 </template>
+
 <script>
 import { mapMutations, mapState, mapActions } from "vuex";
 export default {
